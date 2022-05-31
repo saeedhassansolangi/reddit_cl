@@ -1,0 +1,249 @@
+<%- include("partials/headers")%>
+
+<div class="container mt-3">
+
+  <!-- showing errors -->
+  <%if(typeof error === "undefined"){%>
+  <p></p>
+  <%}else{%>
+  <div style="text-align: center; font-weight: 500; font-size: 18px; margin: 0 20px ">
+    <%=error%> 
+  </div>
+  <%}%>
+
+  <div class="row" >
+    <div class="col-md-8">
+     <div class="row">
+       <div class="col-md-12">
+      <div style="background-color: var(--white); padding:10px; border-radius: 10px;">
+
+        <!-- if there is a POST, render it -->
+        <%if(typeof post !== "undefined")  {%>
+
+          <!-- showing post's subreddit -->
+          <span id="subreddits">
+            <a href="/r/<%=post.subreddit%>">r/<%=post.subreddit%></a>
+          </span>
+
+          <!-- post author name and profile image -->
+          <span style="color: gray">
+            posted by
+            <a href="/u/<%=post.author_name%>" class="author-card">
+              <img src="<%=post.author.profileImage%>" alt="image not found"
+                style="width: 20px; border-radius: 20px" />
+              u/<%=post.author_name%>
+              <%if(currentUser && post.author.username=== currentUser.username){%>
+                <span>(you)</span>
+              <%}%>
+            </a>
+          </span>
+
+          <!-- time when post is created -->
+          <span class="timestamp">
+            <small class="date" title="<%=new Date(post.created_at)%>">
+              <%=moment(post.created_at).fromNow()%>
+            </small>
+          </span>
+      
+          <!-- post title -->
+          <h3><%=post.title%></h3>
+
+          <!-- post url -->
+          <a href="<%=post.url%>" class="post-url" target="_blank" ><%=post.url%></a>
+            <p><%-post.description%></p>
+    
+          <!-- post image -->
+          <img
+            src="<%=post.imageAndVideoUrl%>"
+            alt=""
+            class="img-fluid mt-2"
+            style="display: block; width: 100%; height: auto;"
+          />
+  
+
+  <div class="post-info">
+
+    <div style="display:inline;">
+      <!-- upvote the post -->
+      <button class="upvotess-<%=post._id%> post-votes"  data-postId="<%=post._id%>" onclick="upvote(event)" 
+      <% post.upVotes.forEach((user) => {%>
+        <%if(currentUser && user.username === currentUser.username ) {%>
+           style="color:#FF1800;"
+        <%} else { %>
+        <%}%>
+      <%})%>>
+      <span class="votes upvote"> 
+        <i class="fas fa-arrow-up" ></i> 
+      </span>
+      </button>
+
+    <!-- displaying the total post upvotes -->
+    <span id="upvotes-count-<%=post._id%>" class="vote-count"
+    <% post.upVotes.forEach((user) => {%>
+      <%if(currentUser && user.username === currentUser.username ) {%>
+        style="color:#FF1800; font-weight:500;"
+      <%} else { %>
+      <%}%>
+    <%})%>
+
+    <% post.downVotes.forEach((user) => {%>
+      <%if(currentUser && user.username === currentUser.username ) {%>
+        style="color:#719BFF;font-weight:500"
+      <%} else { %>
+      <%}%>
+    <%})%>   
+    >
+      <%=post.voteScore%>  
+    </span>
+
+    <!-- downvoting the post -->
+    <button class="downvotess-<%=post._id%> post-votes"  data-postId="<%=post._id%>" onclick="downvote(event)" 
+      <% post.downVotes.forEach((user) => {%>
+        <%if(currentUser && user.username === currentUser.username ) {%>
+          style="color:#719BFF;"
+        <%} else { %>
+        <%}%>
+      <%})%>
+      >
+      <span class="votes downvote">
+        <i class="fas fa-arrow-down"></i> 
+      </span>
+
+    </button>
+</div>
+
+
+    <!-- Save and Unsave Post -->
+    <span class="bottom-bar">
+      <!-- show the save button if user is loggedin and haven't already saved it -->
+        <% if(currentUser && !loggedInUser.saved_posts.includes(post._id)) { %>
+          <a href="#" id="post-<%=post._id%>-save" data-postId="<%=post._id%>" onclick="savePost(event)">Save
+          </a>
+          <%}%>
+          <!-- show the unsave button if user is loggedIn and have already  saved it -->
+          <%if(currentUser && loggedInUser.saved_posts.includes(post._id)) {%>
+          <a href="#" id="post-<%=post._id%>-unsave" data-postId="<%=post._id%>" onclick="unSavePost(event)">Unsave
+          </a>
+          <%}%>
+    </span> 
+    
+     </div>
+
+          <%}%>
+
+    </div>
+
+    <form action="/posts/<%=post._id%>/comments"  method="POST" class="mt-5" >
+        <!-- this will comment-partials -->
+        <div class="form-group">
+          <label for="">Write Comment 
+            
+            <%if(currentUser) {%>
+              as <a href="/u/<%=currentUser.username%>" id="comment-user" ><%=currentUser.username%></a>
+              <%}%>
+
+          </label>
+          <!-- disable textarea is user is not LoggedIn -->
+          <textarea name="commentBody" id="comment-textarea" cols="30"  placeholder="write your thoughts..." rows="3" 
+          
+          <%if(!currentUser) {%>
+            disabled
+            <%}%>
+
+          ></textarea>
+        </div>
+
+        <!-- disable button is user is not loggedIn -->
+        <button type="submit"  id="comment-btn" 
+        
+        <%if(!currentUser) {%>
+          disabled
+          <%}%>
+          
+        >Comment</button>
+    </form>
+
+
+    <!-- show post total comments -->
+    <div id="comments">
+      Post Comments(<%=post.totalPostComments%>)
+    </div>
+   
+    <!-- rendering all post's comments -->
+   <%post.comments.forEach((comment) =>{%> 
+      <%-include("./comment", {comment:comment,postId:post._id})%>
+       <%})%>
+
+      </div>
+    </div>
+  </div>
+
+    <div class="col-md-4 desktop-sidebar">
+      <div class="">
+        <div class="col-md-12 author_profiles"> 
+          <div class="community-card">
+            <h5 class="community-info">
+              About Community
+            </h5>
+          </div>
+  
+          <!-- subreddit image -->
+          <img
+            src="<%=subreddit.subredditProfile%>"
+            alt=""
+            class="community-image"
+          />
+
+          <div>
+
+            <div style="text-align: center;">
+            
+              <!-- subreddit name -->
+              <h3 class="community-name">
+                <a href="/r/<%=subreddit.subredditName%>">r/<%=subreddit.subredditName%></a>
+              </h3>
+
+              <!-- subreddit description -->
+              <span class="community-desc"><%=subreddit.subredditDescription%></span>
+          
+            </div>
+            
+          <!-- show "Create New Post" button to only LoggedIn users -->
+          <%if(currentUser ){%>
+          <div>
+            <a href="/r/<%=subreddit.subredditName%>/submit" id="author-create">Create New Post</a>  
+          </div>
+          <%}%>
+
+
+          <div class="sub-data">
+            <span>Created by</span>
+            <a href="/u/<%=subreddit.subredditOwner%>" class="post-url">
+              <%if(currentUser && currentUser.username === subreddit.subredditOwner){%>
+                (you)
+                <%} else {%>  
+                <%=subreddit.subredditOwner%>
+              <%}%>
+            </a>
+            <%=moment(new Date(subreddit.created_at)).fromNow()%>
+         
+          <%if(currentUser && currentUser.username === subreddit.subredditOwner){%>
+            <p style="color: var(--black);">
+              Last updated at <%=new Date(subreddit.updatedAt).toLocaleString("en-US")%>
+            </p>
+          <%}%>
+  
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script src="../public/js/saveComments.js"></script>
+
+<%- include("partials/footer")%>
+
+

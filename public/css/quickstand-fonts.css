@@ -1,0 +1,27 @@
+@font-face {
+  font-family: 'Quicksand';
+  font-style: normal;
+  font-weight: 300;
+  src: url('../fonts/quicksand-v22-latin-300.eot');
+  src: local(''),
+    url('../fonts/quicksand-v22-latin-300.eot?#iefix')
+      format('embedded-opentype'),
+    url('../fonts/quicksand-v22-latin-300.woff2') format('woff2'),
+    url('../fonts/quicksand-v22-latin-300.woff') format('woff'),
+    url('../fonts/quicksand-v22-latin-300.ttf') format('truetype'),
+    url('../fonts/quicksand-v22-latin-300.svg#Quicksand') format('svg');
+}
+
+@font-face {
+  font-family: 'Quicksand';
+  font-style: normal;
+  font-weight: 500;
+  src: url('../fonts/quicksand-v22-latin-500.eot');
+  src: local(''),
+    url('../fonts/quicksand-v22-latin-500.eot?#iefix')
+      format('embedded-opentype'),
+    url('../fonts/quicksand-v22-latin-500.woff2') format('woff2'),
+    url('../fonts/quicksand-v22-latin-500.woff') format('woff'),
+    url('../fonts/quicksand-v22-latin-500.ttf') format('truetype'),
+    url('../fonts/quicksand-v22-latin-500.svg#Quicksand') format('svg');
+}

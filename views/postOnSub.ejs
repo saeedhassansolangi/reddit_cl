@@ -1,0 +1,205 @@
+<%- include("partials/headers")%>
+
+<div class="container mt-2">
+  <% if(typeof error ==="undefined") {%>
+  <p></p>
+  <%}else { %>
+  <p><%=error%></p>
+  <%}%>
+<!--    -->
+    <% if(error && error.length > 0){ %>
+      <div class="alert alert-danger al-success text-center " role="alert">
+        <%= error %>
+      </div>
+    <% } %>
+    <% if(success && success.length > 0){ %>
+      <div class="alert alert-primary text-center al-success " role="alert">
+        <%= success %>
+      </div>
+    <% } %>
+  <div class="row">
+  <div class="col-md-8">
+    <div>
+    <ul class="nav nav-pills nav-fill">
+      <li class="nav-item">
+        <a
+          class="nav-link activeInput"
+          href="#"
+          aria-current="page"
+          id="descriptionAnchor"
+          >Post</a
+        >
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" href="#" id="imagvideoAnchor">Images Or Gifs</a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" href="#" id="urlAnchor">Link</a>
+      </li>
+    </ul>
+
+    <form
+      action="/posts/new"
+      method="POST"
+      class="mt-3"
+      enctype="multipart/form-data"
+      spellcheck="false"
+    >
+      <div class="form-floating mb-3">
+        <input
+          type="text"
+          name="title"
+          class="form-control"
+          id="title"
+          placeholder="Title"
+        />
+        <label for="title">Title</label>
+      </div>
+
+      <div class="form-floating">
+        <textarea
+          class="form-control"
+          name="description"
+          placeholder="description(optional)"
+          id="description"
+        ></textarea>
+      </div>
+
+      <div class="form-floating mb-3 mt-3">
+        <input
+          type="file"
+          name="imageAndVideoUrl"
+          class="form-control"
+          id="fileInput"
+          placeholder="file"
+          style="display: none"
+          accept="image/*"
+        />
+      </div>
+
+      <div class="form-floating mb-3" id="url" style="display: none">
+        <input type="text" class="form-control" name="url" placeholder="url" />
+        <label for="url">Url (optional)</label>
+      </div>
+
+      <div class="form-group mb-3">
+        <select name="subreddit" style="color:rgb(184, 184, 230) !important">
+            <option value="<%=subredditName%>" id="first" >r/<%=subredditName%></option>
+        </select>
+       
+      </div>
+
+      <button type="submit" class="btn-submit">Submit</button>
+    </form>
+  </div>
+
+  </div>
+
+  <div class="col-md-4">
+    <div>
+
+      <div class="col-md-12 author_profiles">
+     
+        <div class="about" style="border-bottom: 1px solid #444242be; margin-bottom: 10px;">
+          <h5 style="padding:10px 0px 1px 0px; letter-spacing:0.1em; color:rgb(155, 148, 148)">About Community</h5>
+        </div>
+
+        <img
+          src="<%=subreddit.subredditProfile%>"
+          alt=""
+          style="width: 200px; height: 200px;display: block; margin: 0 auto; border-radius: 10px;"
+        />
+        <div style="text-align: center;">
+          <h3><%=subreddit.subredditName%></h3>
+        <span><%=subreddit.subredditDescription%></span>
+          
+        <div>
+          <a href="/r/<%=subreddit.subredditName%>/submit" id="author-create">Create New Post</a>  
+        </div>
+
+
+        <div>
+          <span>Created by </span>
+          <a href="/u/<%=subreddit.subredditOwner%>"><%=subreddit.subredditOwner%></a>
+        </div>
+        
+        <p style="color: rgba(192, 184, 184, 0.829)">
+          created  <%=moment(new Date(subreddit.created_at)).fromNow()%>
+        </p>
+
+
+        <%if(currentUser && currentUser.username === subreddit.subredditOwner){%>
+
+        <p style="color: rgba(187, 183, 183, 0.774);">
+        Last updated at <%=new Date(subreddit.updatedAt).toLocaleString("en-US")%>
+        </p>
+
+        <%}%>
+
+      </div>
+      </div>
+    </div>
+  </div>
+
+ 
+
+</div>
+</div>
+  <!-- <script src="https://cdn.ckeditor.com/ckeditor5/27.0.0/classic/ckeditor.js"></script> -->
+  <script src="/public/js/ckeditor.js"></script>
+  <script>
+    ClassicEditor.create(document.querySelector('#description'), {
+      // remove the toolbar plugins  
+      removePlugins: [ '' ],
+      // here are the toolbar plugins 
+        toolbar: ['Heading','Bold','italic', 'Link', 'List' ,'Paragraph','bulletedList', 'numberedList' ],
+        heading: {
+            options: [
+                { model: 'paragraph', title: 'Paragraph', class: 'ck-heading_paragraph' },
+                { model: 'heading3 ', view: 'h3', title: 'Heading 3', class: 'ck-heading_heading3' },
+                { model: 'heading4', view: 'h4', title: 'Heading 4', class: 'ck-heading_heading4' },
+                { model: 'heading5', view: 'h5', title: 'Heading 5', class: 'ck-heading_heading5' },
+
+            ]
+        }
+    } )
+      .catch((error) => {
+        console.error(error);
+      });
+
+      // see all the toolbar options
+    //ClassicEditor.builtinPlugins.map( plugin => console.log(plugin.pluginName) );
+
+    const imagvideo = document.querySelector('#imagvideoAnchor');
+    const descriptionAnchor = document.querySelector('#descriptionAnchor');
+    const links = document.querySelector('#urlAnchor');
+    const fileInput = document.querySelector('#fileInput');
+    const urlInput = document.querySelector('#url');
+
+    imagvideo.addEventListener('click', function () {
+      urlInput.style.display = 'none';
+      fileInput.style.display = 'block';
+      this.classList.add('activeInput');
+      descriptionAnchor.classList.remove('activeInput');
+      links.classList.remove('activeInput');
+    });
+
+    links.addEventListener('click', function () {
+      fileInput.style.display = 'none';
+      urlInput.style.display = 'block';
+      this.classList.add('activeInput');
+      imagvideo.classList.remove('activeInput');
+      descriptionAnchor.classList.remove('activeInput');
+    });
+
+    descriptionAnchor.addEventListener('click', function () {
+      fileInput.style.display = 'none';
+      urlInput.style.display = 'none';
+      this.classList.add('activeInput');
+      imagvideo.classList.remove('activeInput');
+      links.classList.remove('activeInput');
+    });
+  </script>
+
+  <%- include("partials/footer")%>
+</div>

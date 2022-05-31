@@ -1,0 +1,28 @@
+<%- include("partials/headers")%>
+
+<div class="container mt-4">
+  <div class="row">
+    <div class="col-md-6 mobile-view">
+      <h4 style=" border-bottom: 2px solid #fff;" class="m">Update Bio</h4>
+      <form
+        action="/user/<%=user.username%>/<%=user._id%>/profile?_method=PUT"
+        method="POST"
+        spellcheck="false"
+      >
+        <div class="form-group">
+          <textarea
+            name="bio"
+            class="form-control"
+            id="update-bio"
+            cols="30"
+            rows="05"
+          ><%=user.bio%></textarea>
+        </div>
+
+        <button id="update-btn">Update Profile</button>
+      </form>
+    </div>
+  </div>
+</div>
+
+<%- include("partials/footer")%>

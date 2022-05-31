@@ -1,0 +1,67 @@
+<%- include("partials/headers")%>
+
+<div class="container">
+  <div class="row subreddits mt-5">
+    <h5 class="mt-1 mb-4">Subreddits (<%=subreddits.length%>)</h5>
+    <%subreddits.forEach((subreddit) => {%>
+    <div class="col-md-4">
+      <div
+        class="subreddit mb-3"
+        style="
+          background: var(--white);
+          padding: 10px 20px;
+          border-radius: 15px;
+          color: var(--black);
+        "
+      >
+          <a href="/r/<%=subreddit.subredditName%>">
+            <img
+              src="<%=subreddit.subredditProfile%>"
+              alt="image not found"
+              style="width: 30px; border-radius: 30px"
+            />
+            <span style="font-size: 20px; color: var(--black)">
+              r/<%=subreddit.subredditName%>
+            </span>
+          </a>
+          <%if(currentUser && currentUser.username ===
+          subreddit.subredditOwner){%>
+          <small
+            style="
+              font-size: 12px;
+              border-radius: 10px;
+              border: 1px solid white;
+              color:var(--green);
+              font-weight: bold;
+            "
+          >
+            (mine)
+          </small>
+
+          <%}%>
+
+
+          <div
+            style="margin-left: 30px; display: inline-block; font-size: 14px"
+            class="mt-1"
+          >
+            <p
+              style="
+                padding: 1px 10px;
+                border: gray solid 1px;
+                border-radius: 12px;
+              "
+            >
+              <%=subreddit.subredditDescription.slice(0,30)%>...
+            </p>
+
+            <p style="font-weight: bold; text-align: center; border:2px solid var(--blue); border-radius: 10px; background: var(--gray); padding: 1px 10px"
+            ><a href="/r/<%=subreddit.subredditName%>/submit">Create a Post on r/<%=subreddit.subredditName%></a></p>
+          </div>
+      </div>
+    </div>
+    <%})%>
+  </div>
+</div>
+
+<%- include("partials/footer")%>

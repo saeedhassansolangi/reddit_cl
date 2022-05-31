@@ -1,0 +1,230 @@
+<%- include("partials/headers")%>
+
+<div class="container mt-3">
+  <div class="row">
+
+       <!-- check if User is loggedIn  -->
+       <%if(currentUser && currentUser.username === user.username){%>
+        <div class="posts1 mb-2" id="show">
+          <ul class="nav nav-pills nav-fill">
+
+            <!-- user's posts -->
+            <li class="nav-item"><a 
+              <%if(routePath === ""){%>
+              class="nav-link current3" 
+            <%}else{ %>
+              class="nav-link auth-user"
+              <%}%> href="/u/<%=user.username%>" id="show-all-user-posts">Your Posts</a>
+            </li>
+
+            <!-- user's saved posts -->
+            <li class="nav-item"><a    
+              <%if(routePath === "saved_posts"){%>
+                class="nav-link current3" 
+              <%}else{ %>
+                class="nav-link auth-user"
+                <%}%>
+              href="/u/<%=user.username%>/saved_posts" id="show-saved-posts">Saved Posts</a>
+            </li>
+
+
+             <!-- user's saved comments -->
+             <li class="nav-item"><a    
+              <%if(routePath === "saved_comments"){%>
+                class="nav-link current3" 
+              <%}else{ %>
+                class="nav-link auth-user"
+                <%}%>
+              href="/u/<%=user.username%>/saved_comments" id="show-saved-comments">Saved Comments</a>
+            </li>
+
+            <!-- user's subreddits -->
+            <li class="nav-item"><a 
+              <%if(routePath === "subreddits"){%>
+                class="nav-link current3" 
+              <%}else{ %>
+                class="nav-link auth-user"
+                <%}%> href="/u/<%=user.username%>/subreddits" id="show-all-user-subreddits">Your Subreddits</a>
+            </li>
+        
+          </ul>
+        </div>
+        <%}%>
+
+    <div class="col-md-8" >
+      <div>
+
+        <!-- if user is not LoggedIn -->
+        <%if(currentUser && currentUser.username !== user.username && user.posts.length===0 ){%>
+          <p style="text-align: center;">
+            There is No Post Yet by
+            <span style="color: rgb(198, 165, 230); font-weight: 500">
+              <%=user.username%>
+            </span>
+          </p>
+        <%}%>
+      
+        <!-- if user is not LoggedIn and registered user has no posts -->
+        <%if(!currentUser && user.posts.length ===0  || user.posts === []) { %>
+          <p style="text-align: center;"> 
+            There is NO post yet by
+            <span style="color: rgb(198, 165, 230); font-weight: 500">
+              <%=user.username%>
+            </span>
+          </p>
+        <%}%> 
+
+
+      <!-- if ROUTE is "subreddits" than show all the user's subreddits -->
+      <%if(routePath === "subreddits"){%>
+      <div class="show-all-subreddits" >
+        <h2 style="border-bottom: solid 2px #272727; color:gray">All Subreddits</h2>
+
+        <!-- check if user has any subreddit or not -->
+        <%if(user.subreddits.length === 0 || user.subreddits ===[]){%>
+          <!-- if user has no any subreddit than show the below message -->
+          <p class="posts1">There is No Subreddits of you</p>
+        <%} else {%>
+          <!-- if user has subreddits than show all the subreddits of user -->
+    
+          <%user.subreddits.forEach((subreddit) =>{ %>
+              <p class="users-subreddits">
+                <a href="/r/<%=subreddit.subredditName%>" title="<%=subreddit.subredditDescription%>" >r/<%=subreddit.subredditName%>
+                </a>
+              </p>
+          <% })%>
+
+        <%}%>
+      </div>
+      <%}%>
+
+      <!-- if ROUTE is "saved_posts" than show all the Saved posts of the user -->
+      <%if(routePath === "saved_posts") {%>
+        <div class="show-saved-posts">
+          <h2 style="border-bottom: solid 2px #272727; color:gray">Saved Posts</h2>
+          <!-- if user has no any saved posts than show the below message -->
+          <%if(user.saved_posts.length ===0){%>
+            <p class="posts1">there is no saved post yet</p>
+          <%}%>
+          <!-- if user has saved posts than send it to the "author_showcase" page -->
+          <%- include("partials/author-showcase.ejs", { user })%>
+        </div>
+      <%}%>
+
+      <!-- if ROUTE is "saved_comments" than show all the Saved Comments of the user -->
+      <%if(routePath === "saved_comments") {%>
+        <div class="show-saved-comments">
+          <h2 style="border-bottom: solid 2px #272727; color:gray">Saved Comments</h2>
+          <!-- if user has no any saved comments than show the below message -->
+          <%if(user.saved_comments.length ===0){%>
+            <p class="posts1">there is no saved comment yet</p>
+          <%}%>
+        
+          <!-- if user has "saved comments" than render it to the page -->
+          <% user.saved_comments.forEach((comment) => {%>
+            <div class="posts1 mb-2">
+              <strong><%=comment.author.username%></strong> - 
+              <span><%=moment(comment.created_at).fromNow()%></span>
+              <p><%=comment.commentBody%></p>
+          </div>  
+          <%})%>
+        </div>
+      <%}%>
+
+      <!-- if ROUTE is empty than show all the posts of the user -->
+      <%if(routePath === ""){ %>
+        <div class="show-all-posts" >
+          <!-- if user is loggedIn and if he visit his own profile  -->
+          <%if(currentUser && currentUser.username === user.username){%>
+            <h2 style="border-bottom: solid 2px #272727; color:gray">All Posts</h2>
+          <%}%>
+
+          <!-- checking if the user has any posts or not, if not than show the create post button -->
+        <%if(currentUser && currentUser.username === user.username && (user.posts.length ===0 )){%>
+          <p style="text-align: center;">
+            There is No Post yet,
+            <a href="/posts/new" style="text-decoration: underline; font-weight: 500">
+              let's create one
+            </a>
+          </p>
+          <%}%> 
+            <!-- if user has posts than send it to the "author_showcase" page -->
+            <%- include("partials/author-showcase.ejs", { user })%>
+        </div>
+      <%}%>
+
+      </div>
+      </div>
+
+      <div class="col-md-4">
+          <div class="col-md-12 author_profiles" style="position: relative">
+            <div style="background-color: rgb(89, 89, 223);border-radius: 4px 4px 0 0;height: 94px;left: 0;position: absolute;top: 0;width: 100%;">
+            </div>
+
+            <div class="authors-avatar">
+
+              <img
+              src="<%=user.profileImage%>"
+              alt=""
+              style="height: 160px;z-index: 1;position: relative;border-radius: 10px;"
+              />
+
+            </div>
+           
+            <div>
+              <div style="margin-top:60%">
+                <!-- if LoggedIn user visit his Profile  -->
+                <span style="display:block; text-align: center;font-size: 25px;font-weight: 500;">
+                  <%=user.username%>
+                <%if(currentUser && currentUser.username === user.username){%>
+                  <a href="/user/<%=user.username%>/profile" ><i class="fas fa-edit"></i></a>
+                  <%}%>
+                </span>
+
+                <p class="text-muted;" style="display:block; text-align: center;">
+                  u/<%=user.username%> 
+                </p>
+                
+                </div>
+               <p style="text-align:justify; font-size: 14px;"><%=user.bio%></p>
+              <%if(currentUser && currentUser.username === user.username){%>
+              
+                <div>
+                <a href="/user/<%=user.username%>/avatar" id="author-avatar">Change Avatar</a>  
+                </div>
+
+                <div>
+                  <a href="/posts/new" id="author-create">Create New Post</a>  
+                </div>
+
+              <%}%>
+            </div>
+            
+          <div style="text-align: center;">
+
+            <p style="color: rgba(128, 128, 128, 0.829)">
+              Joined <%=moment(user.created_at).fromNow()%>
+            </p>
+
+            <%if(currentUser && currentUser.username === user.username){%>
+
+            <p style="color: rgba(128, 128, 128, 0.774);">
+             Last updated at <%=new Date(user.updatedAt).toLocaleString("en-US")%>
+            </p>
+
+          </div>
+
+            <%}%>
+
+          </div>
+        </div>
+      </div>
+  </div>
+
+</div>
+
+
+<script src="../public/js/saveComments.js"></script>
+
+
+<%- include("partials/footer")%>

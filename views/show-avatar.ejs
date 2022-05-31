@@ -1,0 +1,198 @@
+<%- include("partials/headers")%>
+
+<div class="container mt-1">
+  <div class="row">
+
+    <!-- avatars here -->
+    <div class="col-md-3">
+      <h5>Choose Avatar</h5>
+      <div class="row avatar"></div>
+    </div>
+    
+    <!-- original image -->
+    <div class="col-md-8 " style="text-align: center; ">
+
+      <!-- Original Image -->
+      <h4>Profile Image</h4>
+      <img
+        src="<%=user.profileImage%>"
+        class="profile-image"
+        "
+        alt="image not found"
+      />
+
+      <button type="submit" class="save_image mt-3">Save Image</button>
+    </div>
+
+  </div>
+    <!-- <div class="row"> -->
+    <div class="col-md-4">
+      <h5>Choose Background Color for Avatar</h5>
+      <div class="row">
+        <div class="colorsP col-md-3"></div>
+      </div>
+
+  
+  </div>
+
+  </div>
+  </div>
+
+  <script>
+    // where XX is a number for the snoo style from 01 to 20
+    //YYYYYY is one of the hex color codes
+    // https://www.redditstatic.com/avatars/avatar_default_02_A5A4A4.png
+
+    const avatar_url =
+      'https://www.redditstatic.com/avatars/avatar_default_XX_YYYYYY.png';
+
+    const avatar_colors = [
+      'A5A4A4',
+      '545452',
+      'A06A42',
+      'C18D42',
+      'FF4500',
+      'FF8717',
+      'FFB000',
+      'FFD635',
+      'DDBD37',
+      'D4E815',
+      '94E044',
+      '46A508',
+      '46D160',
+      '0DD3BB',
+      '25B79F',
+      '008985',
+      '24A0ED',
+      '0079D3',
+      '7193FF',
+      '4856A3',
+      '7E53C1',
+      'FF66AC',
+      'DB0064',
+      'EA0027',
+      'FF585B',
+    ];
+
+    const avatar_numbers = [
+      '01',
+      '02',
+      '03',
+      '04',
+      '05',
+      '06',
+      '07',
+      '08',
+      '09',
+      '10',
+      '11',
+      '12',
+      '13',
+      '14',
+      '15',
+      '16',
+      '17',
+      '18',
+      '19',
+      '20',
+    ];
+
+      // 
+      const colors = document.querySelector('.colorsP');
+    //     for (let i = 0; i < colors.length; i++) {
+    //   colors[i].addEventListener("click",(e) =>{
+    //   console.log(this.style);
+    //   })
+    //  }
+
+
+
+  //  putting colors into the browser
+    avatar_colors.forEach((color) => {
+      const div = document.createElement('div');
+      div.style.backgroundColor = `#${color}`;
+      div.style.width = '30px';
+      div.style.margin = "2px"
+      div.id = `#${color}`;
+      div.classList.add('colors');
+      div.style.height = '30px';
+      div.style.borderRadius = '100px';
+      colors.append(div);
+    });
+
+
+    // putting images into the browser
+    const avatar = document.querySelector('.avatar');
+    avatar_numbers.forEach((number) => {
+      const newLi = document.createElement('div');
+      newLi.classList.add("col-md-2")
+      newLi.classList.add("m-1")
+      newLi.innerHTML = `<img src="https://www.redditstatic.com/avatars/avatar_default_${number}_A5A4A4.png"  alt="image not found" class="avatarImage"/>`;
+      avatar.append(newLi);
+    });
+
+
+
+    // getting image src's
+    const avatarImage = document.querySelectorAll(".avatarImage")
+    for (let i = 0; i < avatarImage.length; i++) {
+      avatarImage[i].addEventListener("click", (e) =>{
+      console.dir(e.target.src);
+      const image1 = document.querySelector(".profile-image")
+      image1.src = e.target.src
+    })
+    }
+    
+    // getting colors  
+    const colors1 = document.querySelectorAll(".colors")
+    for (let i = 0; i < colors1.length; i++) {
+      colors1[i].addEventListener("click", function (e) {
+     const color =  rgb2hex(this.style.backgroundColor).toUpperCase().replace("#","");
+     const avatarNumber = document.querySelector(".profile-image").src.split('_')[2];
+    //  console.log({avatarNumber, color});
+     document.querySelector(".profile-image").src = `https://www.redditstatic.com/avatars/avatar_default_${avatarNumber}_${color}.png`
+
+    //  console.log(document.querySelector(".profile-image").src);
+
+      })
+    }
+    
+
+    //  ============================converting rgb() to hex()====================
+      const hexDigits = new Array("0","1","2","3","4","5","6","7","8","9","a","b","c","d","e","f"); 
+      //Function to convert rgb color to hex format
+      function rgb2hex(rgb) {
+      rgb = rgb.match(/^rgb\((\d+),\s*(\d+),\s*(\d+)\)$/);
+      return "#" + hex(rgb[1]) + hex(rgb[2]) + hex(rgb[3]);
+      }
+
+      function hex(x) {
+        return isNaN(x) ? "00" : hexDigits[(x - x % 16) / 16] + hexDigits[x % 16];
+      }
+
+    
+      // sending post request to the server for updating the user's profile pictrue
+      const currentUser = window.location.pathname.split("/")[2];
+      const makeRequestToServer = () => {
+        const xhr = new XMLHttpRequest();
+        xhr.onreadystatechange = function () {
+          if (xhr.readyState == XMLHttpRequest.DONE) {
+              window.location = `/user/${currentUser}`
+          }
+        };
+
+        const avatar= document.querySelector(".profile-image").src
+        xhr.open("POST", '/user/' + currentUser + "/update", true);
+        xhr.setRequestHeader('Content-type', 'application/json');
+        xhr.send(JSON.stringify({ avatar }));
+      };
+
+
+      document.querySelector(".save_image").addEventListener('click', (e) => {
+        makeRequestToServer();
+      });
+
+  </script>
+
+</div>
+<%- include("partials/footer")%>

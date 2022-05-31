@@ -1,0 +1,60 @@
+<%- include("partials/headers")%>
+
+<div class="container">
+  <div class="row users">
+    <h5>Users (<%=users.length%>)</h5>
+    <%users.forEach((user) =>{%>
+    <div class="col-md-4">
+      <div
+        class="subreddit mb-3"
+        style="
+          background: var(--white);
+          padding: 10px 20px;
+          border-radius: 15px;
+          text-align: center;
+          color: var(--black);
+        "
+      >
+        <div>
+          <img
+            src="<%=user.profileImage%>"
+            alt="image not found"
+            style="
+              width: 50px;
+              border-radius: 30px;
+              display: block;
+              margin: 0 auto;
+            "
+          />
+
+          <a href="/u/<%=user.username%>">
+            <span style="font-size: 20px; color: var(--black)">
+              u/<%=user.username%>
+            </span>
+          </a>
+          <%if(currentUser && currentUser.username === user.username){%>
+          <small
+            style="
+              font-size: 13px;
+              padding: 1px 10px;
+              border-radius: 10px;
+              border: 1px solid white;
+            "
+          >
+            you
+          </small>
+          <%}%>
+        </div>
+        <p
+          style="padding: 1px 10px; border: gray solid 1px; border-radius: 12px"
+        >
+          <%=user.bio.slice(0,30)%>...
+        </p>
+      </div>
+    </div>
+
+    <%})%>
+  </div>
+</div>
+
+<%- include("partials/footer")%>

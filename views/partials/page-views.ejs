@@ -1,0 +1,109 @@
+<div class="post-info">
+
+  <div style="display:inline;">
+    <button class="upvotess-<%=post._id%> post-votes"  data-postId="<%=post._id%>" onclick="upvote(event)"
+      <% post.upVotes.forEach((user) => {%>
+        <%if(currentUser && user.username === currentUser.username ) {%>
+           style="color:#FF1800;"
+        <%} else { %>
+        <%}%>
+      <%})%>>
+      <span class="votes upvote"> 
+        <i class="fas fa-arrow-up" ></i> 
+      </span>
+    </button>
+
+    <span id="upvotes-count-<%=post._id%>" class="vote-count"
+    <% post.upVotes.forEach((user) => {%>
+      <%if(currentUser && user.username === currentUser.username ) {%>
+        style="color:#FF1800; font-weight:500;"
+      <%} else { %>
+      <%}%>
+    <%})%>
+
+    <% post.downVotes.forEach((user) => {%>
+      <%if(currentUser && user.username === currentUser.username ) {%>
+        style="color:#719BFF;font-weight:500"
+      <%} else { %>
+      <%}%>
+    <%})%>   
+    >
+      <%=post.voteScore%>  
+    </span>
+
+    <button class="downvotess-<%=post._id%> post-votes"  data-postId="<%=post._id%>" onclick="downvote(event)"
+      <% post.downVotes.forEach((user) => {%>
+        <%if(currentUser && user.username === currentUser.username ) {%>
+          style="color:#719BFF;"
+        <%} else { %>
+        <%}%>
+      <%})%>
+      >
+      <span class="votes downvote">
+        <i class="fas fa-arrow-down"></i> 
+      </span>
+
+    </button>
+</div>
+
+<a href="/posts/<%=post._id%>" class="view-post-text bottom-bar"><i class="fas fa-comment"></i>
+    <span class="post-comment" id="post-comment-id">View Post</span>
+</a>
+
+
+    <div style="display: inline;" class="post-views popover__wrapper bottom-bar">
+      <i class="fas fa-eye"></i>
+      <%=post.postViews%>
+      <a class="popover__title">people view this</a>
+      <div class="popover__content">
+        <%if(post.postViewUsers.length !==0){%>
+          <ul>
+            <% post.postViewUsers.forEach((user )=> {%>
+              <li>
+                <a href="/u/<%=user.username%>">
+                  <%if(currentUser && currentUser.username===user.username) {%>
+                    <%=user.username%>
+                      <img src="<%=user.profileImage%>"
+                        style="width: 15px; border-radius: 10px; margin: 5px;" alt="">
+                </a>(you)
+                  <%} else { %>
+                    <%=user.username%>
+                    <img src="<%=user.profileImage%>"
+                      style="width: 15px; border-radius: 10px; margin: 5px;" alt=""></a>
+                    <%}%>
+              </li>
+            <%})%>
+          </ul>
+        <%}else {%>
+          <p style=" border-radius: 10px; margin: 5px;color:#fff;opacity: 1;">no views yet</p>
+        <%}%>
+      </div>
+  </div>
+
+    <!-- total comments count -->
+    <a href="/posts/<%=post._id%>#comments" class="bottom-bar">
+    <span class="post-comment ">
+        <i class="fas fa-comment"></i>
+        <%=post.totalPostComments%>  <span class="comment-text">Comments</span>
+      </span>
+      </a>
+
+  <!-- Save and Unsave Post -->
+    <span  class="bottom-bar">
+      <% if(currentUser && !loggedInUser.saved_posts.includes(post._id)) { %>
+        <a href="#" id="post-<%=post._id%>-save" data-postId="<%=post._id%>" onclick="savePost(event)">Save
+        </a>
+        <%}%>
+        
+        <%if(currentUser && loggedInUser.saved_posts.includes(post._id)) {%>
+        <a href="#" id="post-<%=post._id%>-unsave" data-postId="<%=post._id%>" onclick="unSavePost(event)">Unsave
+        </a>
+        <%}%>
+    </span> 
+
+    <!-- delete post -->
+    <%if(currentUser && post.author.username=== currentUser.username){%>
+      <span class="bottom-bar"><a href="#" id="post-<%=post._id%>" data-postId="<%=post._id%>" onclick="deletePost(event)">Delete</a></span>
+    <%}%>
+ 
+</div>

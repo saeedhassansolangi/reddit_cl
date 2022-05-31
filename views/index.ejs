@@ -1,0 +1,99 @@
+<%- include("partials/headers")%>
+
+  <div class="container mt-3">
+    <div class="row">
+      <div class="col-md-8 col-sm-12">
+          <% if(error && error.length > 0){ %>
+              <div class="alert alert-danger al-success text-center" role="alert">
+                  <%= error %>
+              </div>
+          <% } %>
+          <% if(success && success.length > 0){ %>
+              <div class="alert alert-primary text-center al-success " role="alert">
+                  <%= success %>
+              </div>
+          <% } %>
+          <div>
+            <% posts.forEach((post)=>{ %>
+              <div class="col-md-12 col-sm-12 mb-3 posts" id="posts-<%=post._id%>">
+                <div data-postId="<%=post._id%>" onclick="navigateToPost(this)">
+                  <div>
+                    <%if(post && post.community) {%>
+                      <% post.community.forEach((community)=> { %>
+                        <img src="<%=community.subredditProfile%>" alt="img not found" id="profile-img" />
+                        <%})%>
+                          <%}%>
+                            <small id="subreddits"><a href="/r/<%=post.subreddit%>">r/<%=post.subreddit%></a></small>
+                            <span style="color: var(--black)">
+                              posted by
+                              <a href="/u/<%=post.author_name%>" class="author-card">
+                                <img src="<%=post.author.profileImage%>" alt="image not found"
+                                  style="width: 20px; border-radius: 20px" />
+
+                                u/<%=post.author_name%>
+                                  <%if(currentUser && post.author.username===currentUser.username){%>
+                                    <span>(you)</span>
+                                    <%}%>
+                              </a>
+                            </span>
+                            <span class="timestamp">
+                              <small title="<%=new Date(post.created_at)%>">
+                                <%=moment(post.created_at).fromNow()%>
+                              </small>
+                            </span>
+                  </div>
+
+                  <div>
+                    <a href="/posts/<%=post._id%>" title="posts/<%=post._id%>" class="post-title">
+                      <%=post.title%>
+                    </a>
+                  </div>
+
+                  <%if(post.url !=="" ) {%>
+
+                    <a href="<%=post.url%>" target="_blank" class="post-url">
+                      <%=post.url.replace( /^(?:https?:\/\/)?(?:www\.)?/i, "" ).split('').join("").slice(0,18)%>...
+                        <i class="fas fa-external-link-alt" style="font-size: 10px"></i>
+                    </a>
+                    <%}%>
+                      <% if (post.description !=="" ) {%>
+                        <%- post.description.substring(0,80)%>
+                          <%if(post.description.length>
+                            80){%>
+                            <span><a href="/posts/<%=post._id%>" class="post-url">Readmore...</a></span>
+                            <%}%>
+                              <%}%>
+
+                                <div class="mt-2">
+                                  <img src="<%=post.imageAndVideoUrl%>" alt="" class="img-fluid post-image" />
+                                </div>
+                </div>
+
+                <%- include("partials/page-views",{ post })%>
+              </div>
+
+              <%})%>
+          </div>
+
+            <% if(currentUser && posts.length===0 ) {%>
+              <div>
+                <span>There is no Post yet</span>
+                <h4 class="h4-1">
+                  <a href="/posts/new" id="returnHome">let' s create one </a>
+                </h4>
+              </div>
+              <%}%>
+      </div>
+
+      <div class="col-md-4 desktop-sidebar">
+          <%- include('partials/sideBarCard.ejs') %>
+          <%- include('partials/sortingCard.ejs',{sort}) %>
+      </div>
+    </div>
+  </div>
+
+  <div class="footer">
+    <p>Created by &copy; saeedhassansolangi 2020</p>
+  </div>
+
+  <%- include("partials/footer")%>

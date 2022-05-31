@@ -1,0 +1,224 @@
+<%- include("partials/headers")%>
+
+<div class="container ">
+
+  <div class="query mt-2">
+    <h3><%=queryParams%></h3>
+    <p>Search results</p>
+  </div>
+
+  <div class="row mt-5">
+    <!-- searched posts here -->
+    <div class="col-md-12 mb-2">
+      <div style="color:gray">
+        <h5>Searchd POSTS</h5>
+      <%if(typeof posts === 'undefined' || posts.length ===0){%>
+        <p>there is no posts</p>
+        <%}%>
+      </div>
+      <div class="row">
+          <% posts.forEach((post)=>{ %>
+            <div class="col-md-12 mb-1 m-1 posts" id="posts-<%=post._id%>" >
+              <div data-postId="<%=post._id%>" style="margin: 0 auto" onclick="navigateToPost(this)">
+              <div>
+                <%if(post && post.community) {%>
+                  <% post.community.forEach((community)=> { %>
+                    <img src="<%=community.subredditProfile%>" alt="img not found" id="profile-img" />
+                    <%}) %>
+                      <%}%>
+                        <small id="subreddits"><a href="/r/<%=post.subreddit%>">r/<%=post.subreddit%></a></small>
+                        <span style="color: gray">posted by
+                          <a href="/u/<%=post.author_name%>" class="author-card">
+                            <img src="<%=post.author.profileImage%>" alt="image not founds"
+                              style="width: 20px; border-radius: 20px" />
+
+                            <%=post.author_name%>
+                            <%if(currentUser && post.author.username=== currentUser.username){%>
+                              <span>(you)</span>
+                            <%}%>
+
+                          </a></span>
+
+                        <span style="color: gray">
+                          <small>at <%=new Date(post.created_at).toLocaleString("en-US")%></small>
+                          <!-- <small class="date"><%=post.created_at%></small> -->
+
+                        </span>
+              </div>
+              <div>
+                <a href="/posts/<%=post._id%>" title="visit /posts/<%=post._id%> post" id="post-title">
+                  <%=post.title%>
+                </a>
+              </div>
+
+              <!-- checking description if exits -->
+              <% if (post.description !=="" ) {%>
+                <%-post.description.substring(0,100)%>
+                  <%}%>
+
+                    <!-- checking url if exists -->
+                    <%if(post.url !=="" ) {%>
+                      <a href="<%=post.url%>" target="_blank" style="color: var(--blue)">
+                        <%=post.url.replace( /^(?:https?:\/\/)?(?:www\.)?/i, "" ).split(' ').join("").slice(0,18)%>...
+                <i class="fas fa-external-link-alt" style="font-size: 10px"></i>
+               </a>
+               <%}%>
+
+               <!--rendering image -->
+              <img
+              src="<%=post.imageAndVideoUrl%>"
+              alt=""
+              class="img-fluid mt-2"
+              style="display: block"
+              />
+          
+          <!-- post bottom bar -->
+        </div>
+          <%- include("partials/page-views",{post})%>
+        </div>
+        
+
+        <%})%>
+      </div>
+    </div>
+
+    <!-- searched subreddits here -->
+    <div class="col-md-12 mb-2">
+    
+      <div style="color:gray;">
+        <h5>Searched Subreddits</h5>
+        <%if(typeof subreddits === 'undefined' || subreddits.length ===0){%>
+          <p>there is no subreddits</p>
+          <%}else {%>
+      <div class="row">
+          <%subreddits.forEach((subreddit) => {%>
+            <div class="col-md-4">
+              <div
+                class="subreddit mb-3"
+                style="background: var(--white); padding: 10px 20px; border-radius: 15px"
+              >
+                <!-- <div style="background: url(<=subreddit.subredditProfile%>); width: 100px; height: 100px;"></div> -->
+                <div>
+                  <a href="/r/<%=subreddit.subredditName%>">
+                    <img
+                      src="<%=subreddit.subredditProfile%>"
+                      alt="image not found"
+                      style="width: 30px; border-radius: 30px"
+                    />
+        
+                    <span style="font-size: 20px">
+                      r/<%=subreddit.subredditName%>
+                    </span>
+                  </a>
+                  <%if(currentUser && currentUser.username ===
+                  subreddit.subredditOwner){%>
+                  <small
+                    style="
+                      font-size: 12px;
+                      color: var(----black);
+                      padding: 1px 10px;
+                      border-radius: 10px;
+                      border: 1px solid white;
+                    "
+                  >
+                    mine
+                  </small>
+                  <%}%>
+                </div>
+        
+                <div
+                  style="margin-left: 30px; display: inline-block; font-size: 14px"
+                  class="mt-1"
+                >
+                  <p
+                    style="
+                      padding: 1px 10px;
+                      border: gray solid 1px;
+                      border-radius: 12px;
+                    "
+                  >
+                    <%=subreddit.subredditDescription.slice(0,30)%>...
+                  </p>
+                </div>
+              </div>
+            </div>
+            <%})%>
+      </div>
+      <%}%>
+      </div>
+       
+      </div>
+    </div>
+
+    <!-- searched users here -->
+    <div class="col-md-12">
+      
+      <div style="color:gray">
+        <h5>Searched Users</h5>
+      <%if(typeof users === 'undefined' || users.length ===0){%>
+        <p>there is no posts</p>
+        <%}else {%>
+       
+      <div class="row">
+        <%users.forEach((user) =>{%>
+          <div class="col-md-3">
+
+          <div
+            class="subreddit mb-3"
+            style="
+              background: var(--white);
+              padding: 10px 20px;
+              border-radius: 15px;
+              text-align: center;
+            "
+          >
+            <div>
+              <img
+                src="<%=user.profileImage%>"
+                alt="image not found"
+                style="
+                  width: 50px;
+                  border-radius: 30px;
+                  display: block;
+                  margin: 0 auto;
+                "
+              />
+
+              <a href="/u/<%=user.username%>">
+                <span style="font-size: 20px"> u/<%=user.username%> </span>
+              </a>
+              <%if(currentUser && currentUser.username === user.username){%>
+              <small
+                style="
+                  font-size: 13px;
+                  color: white;
+                  padding: 1px 10px;
+                  border-radius: 10px;
+                  border: 1px solid white;
+                "
+              >
+                you
+              </small>
+              <%}%>
+            </div>
+            <p
+              style="
+                padding: 1px 10px;
+                border: gray solid 1px;
+                border-radius: 12px;
+              "
+            >
+              <%=user.bio.slice(0,20)%>...
+            </p>
+          </div>
+          </div>
+          <%})%>
+      </div>
+      <%}%>
+      </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<%- include("partials/footer")%>

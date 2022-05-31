@@ -1,0 +1,121 @@
+<%- include("partials/headers")%>
+
+<div class="container mt-3">
+
+  <div class="row">
+    <div class="col-md-8">
+      <%if(posts.length === 0){%>
+        <h5 style="color: gray;text-align: center;">There is no post inside this subreddit</h5>
+      <%}%>
+
+      <div>
+        <%posts.forEach((post) => { %>
+        <div class="col-md-12 mb-3 posts" id="posts-<%=post._id%>">
+          <div data-postId="<%=post._id%>" style="margin: 0 auto" onclick="navigateToPost(this)">
+          <div id="profile">
+            <span class="authors-subreddit"
+              ><a href="/r/<%=post.subreddit%>" title="r/<%=post.subreddit%>"
+                >r/<%=subreddit%></a
+              ></span
+            >
+            <span style="color: gray"
+              >posted by
+             
+              <a href="/u/<%=post.author_name%>" class="author-card"
+                >u/<%=post.author_name%></a
+              ></span
+            >
+
+            <span class="timestamp">
+              <small class="date" title="<%=new Date(post.created_at)%>">
+                <%=moment(post.created_at).fromNow()%>
+              </small>
+            </span>
+
+
+          </div>
+    
+          <!-- checking if there is any user loggedIn or not -->
+          <% if(!currentUser){%>
+          <a id="post-title" href="/posts/<%=post._id%>"><%=post.title%></a>
+          <%}else {%>
+          <a href="/posts/<%=post._id%>" id="post-title"><%=post.title%></a>
+          <%}%>
+    
+          <!--rendering description on -->
+          <% if (post.description !== "") {%>
+            <%-post.description.slice(0,500)%><a href="/posts/<%=post._id%>"
+              >Read more...</a
+            >
+          <%}%>
+    
+          <img
+            src="<%=post.imageAndVideoUrl%>"
+            alt=""
+            class="img-fluid mt-2"
+            style="display: block"
+          />
+        </div>
+    
+          <%- include("partials/page-views",{post})%>
+            
+        </div>
+          <%})%>
+
+        </div>
+    </div>
+
+    <div class="col-md-4">
+      <div>
+
+        <div class="col-md-12 author_profiles">
+       
+          <div class="about" style="border-bottom: 1px solid #444242be; margin-bottom: 10px;">
+            <h5 style="padding:10px 0px 1px 0px; letter-spacing:0.1em; color:gray">About Community</h5>
+          </div>
+
+          <img
+            src="<%=subredditDetail.subredditProfile%>"
+            alt=""
+            style="width: 200px; height: 200px;display: block; margin: 0 auto; border-radius: 10px;"
+          />
+          <div style="text-align: center;">
+            <h3>r/<%=subredditDetail.subredditName%></h3>
+          <span><%=subredditDetail.subredditDescription%></span>
+       
+          <%if(currentUser){%>
+            <div>
+              <a href="/r/<%=subredditDetail.subredditName%>/submit" id="author-create">Create New Post</a>  
+            </div>
+            <%}%>
+
+          <div>
+            <span>Created by </span>
+            <a href="/u/<%=subredditDetail.subredditOwner%>"><%=subredditDetail.subredditOwner%></a>
+          </div>
+          
+          <p style="color: var(--black)">
+            created at <%=new Date(subredditDetail.created_at).toLocaleString("en-US")%>
+          </p>
+
+
+          <%if(currentUser && currentUser.username === subredditDetail.subredditOwner){%>
+
+          <p style="color: var(--black)">
+          Last updated at <%=new Date(subredditDetail.updatedAt).toLocaleString("en-US")%>
+          </p>
+
+          <%}%>
+
+        </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+
+  </div>
+
+
+</div>
+<%- include("partials/footer")%>

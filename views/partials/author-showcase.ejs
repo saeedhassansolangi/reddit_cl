@@ -1,0 +1,60 @@
+<% user.posts.forEach((post) =>{ %>
+<div class="col-md-12 mb-3 posts" id="posts-<%=post._id%>">
+  <div
+    data-postId="<%=post._id%>"
+    style="margin: 0 auto"
+    onclick="navigateToPost(this)"
+  >
+    <span class="authors-subreddit">
+      <a href="/r/<%=post.subreddit%>" title="r/<%=post.subreddit%>">
+        r/<%=post.subreddit%>
+      </a>
+    </span>
+
+    <span style="color: gray; margin-left: 5px;">
+      posted by <a href="/u/<%=user.username%>" class="author-card">u/<%=post.author_name%></a
+      >
+    </span>
+
+    <span class="timestamp">
+      <small class="date" title="<%=new Date(post.created_at)%>">
+        <%=moment(post.created_at).fromNow()%>
+      </small>
+    </span>
+
+     <!-- post title -->
+     <div>
+      <a href="/posts/<%=post._id%>" title="posts/<%=post._id%>" class="post-title">
+        <%=post.title%>
+      </a>
+    </div>
+
+    <!-- checking url if exists -->
+      <%if(post.url !=="" ) {%>
+        <a href="<%=post.url%>" target="_blank" class="post-url">
+          <%=post.url.replace( /^(?:https?:\/\/)?(?:www\.)?/i, "" ).split(' ').join("").slice(0,18)%>...
+        <i class="fas fa-external-link-alt" style="font-size: 10px"></i>
+        </a>
+      <%}%>
+
+    <!-- checking description if exits -->
+    <% if (post.description !=="" ) {%>
+      <%-post.description.substring(0,80)%>
+      <%if(post.description.length > 80){%>
+        <span><a href="/posts/<%=post._id%>" class="post-url">Readmore...</a></span>
+      <%}%>
+    <%}%>
+
+    <div class="mt-2">
+      <img
+      src="<%=post.imageAndVideoUrl%>"
+      alt=""
+      class="img-fluid post-image"
+      />
+  </div>
+    
+  </div>
+  <%- include("./page-views",{post})%>
+</div>
+
+<%})%>

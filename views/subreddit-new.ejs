@@ -1,0 +1,65 @@
+<%- include("partials/headers")%>
+
+<div class="container mt-5 mobile-view" >
+  <h3 style="border-bottom: #fff solid 1px; padding-bottom: 5px">
+    Create a community
+  </h3>
+
+  <% if(typeof error ==="undefined") {%>
+  <p></p>
+  <%}else { %>
+  <p><%=error%></p>
+  <%}%>
+
+  <form
+    action="/subreddits/create"
+    method="POST"
+    class="mt-3"
+    spellcheck="false"
+  >
+    <div class="form-group mb-4">
+      <label for="name" class="subreddit-label">Name</label>
+      <input type="text" name="subredditName" class="form-control" id="name" />
+    </div>
+
+    <div class="form-group mb-4">
+      <label for="description" class="subreddit-label">Description</label>
+      <textarea
+        class="form-control"
+        name="subredditDescription"
+        style="height: 100px"
+      ></textarea>
+    </div>
+
+    <div class="form-group">
+      <h6>Community Type</h6>
+      <div class="form-check">
+        <input
+          class="form-check-input"
+          type="radio"
+          name="subredditType"
+          value="public"
+          id="flexRadioDefault1"
+          checked
+        />
+        <label class="form-check-label" for="flexRadioDefault1"> Public </label>
+      </div>
+      <div class="form-check">
+        <input
+          class="form-check-input"
+          type="radio"
+          name="subredditType"
+          value="private"
+          id="flexRadioDefault2"
+        />
+        <label class="form-check-label" for="flexRadioDefault2">
+          Private
+        </label>
+      </div>
+    </div>
+
+    <button type="submit" class="btn-create">Submit</button>
+  </form>
+</div>
+
+<%- include("partials/footer")%>

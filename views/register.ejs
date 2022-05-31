@@ -1,0 +1,65 @@
+<%- include("partials/headers",{title})%>
+
+<div class="container">
+  <div class="row">
+    <div class="col-md-12 mobile-view forms">
+      <% if(typeof error ==="undefined") {%>
+      <p></p>
+      <%}else { %>
+      <p style="text-align: center"><%=error%></p>
+      <%}%>
+
+      <h2>Register Here</h2>
+      <form action="/user/register/new" method="POST" spellcheck="false">
+        <div class="form-floating mb-3">
+          <input
+            type="username"
+            name="username"
+            class="form-control lg"
+            id="username"
+            placeholder="username"
+          />
+          <label for="username">Username</label>
+        </div>
+
+        <div class="form-floating mb-3">
+          <input
+            type="email"
+            name="email"
+            class="form-control lg"
+            id="email"
+            placeholder="email"
+          />
+          <label for="email">Email</label>
+        </div>
+
+        <div class="form-floating mb-3">
+          <input
+            type="password"
+            name="password"
+            class="form-control lg"
+            id="password"
+            placeholder="password"
+          />
+          <label for="password">Password</label>
+        </div>
+
+        <div class="form-floating mb-3">
+          <input
+            type="password"
+            name="confirm_password"
+            class="form-control lg"
+            id="password2"
+            placeholder="confirm_password"
+          />
+          <label for="password2">Confirm Password</label>
+        </div>
+
+        <button type="submit" class="submit-btn">Register</button>
+      </form>
+      <p>Already have an account ?<a href="/user/login"> Login here</a></p>
+    </div>
+  </div>
+</div>
+
+<%- include("partials/footer")%>

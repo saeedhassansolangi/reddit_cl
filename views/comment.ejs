@@ -1,0 +1,78 @@
+<div class="col-xs-12 comment-indent mt-3 mb-2" id="border-main">
+  <div
+    class="text-right"
+    style="padding: 3px 10px; border-radius: 10px"
+    id="comment-<%=comment._id%>"
+  >
+    <a
+      href="/u/<%=comment.username%>"
+      style="color: var(--black); font-weight: bolder"
+    >
+      <img
+        src="<%=comment.author.profileImage%>"
+        alt="no image found"
+        style="width: 20px; border-radius: 10px"
+      />
+
+      <%if(currentUser && currentUser.username === comment.username){%>
+      <%=comment.username%>
+      <span style="color: var(--green); font-weight: bold;"> (you)</span> <%}else {%>
+      <%=comment.username%> <%}%>
+    </a>
+    <small><%=moment(comment.created_at).fromNow()%></small>
+    <p class="comment-indent" style="margin: 1px 20px">
+      <span><%= comment.commentBody %> </span>
+    </p>
+
+    <%if(currentUser) {%>
+
+    <a
+      href="/posts/<%=postId%>/comments/<%=comment._id%>/replies/new"
+      style="color: var(--blue); font-size: 12px; font-weight: bold"
+      class="comment-indent"
+      >Reply</a
+    >
+
+    <% if(currentUser && !loggedInUser.saved_comments.includes(comment._id)) {
+    %>
+    <span>
+      <a
+        data-comment-id="<%=comment._id%>"
+        data-post-id="<%=postId%>"
+        id="comment-<%=comment._id%>-save"
+        style="color: var(--blue); font-size: 12px; font-weight: 700"
+        class="comment-indent comment-ex"
+        onclick="saveComment(event)"
+        >Save</a
+      >
+    </span>
+    <%}%> <%if(currentUser &&
+    loggedInUser.saved_comments.includes(comment._id)){%>
+    <span>
+      <a
+        data-comment-id="<%=comment._id%>"
+        data-post-id="<%=postId%>"
+        id="comment-<%=comment._id%>-unsave"
+        style="color: var(--blue); font-size: 12px; font-weight: 600"
+        class="comment-indent comment-ex"
+        onclick="unsaveComment(event)"
+        >Unsave</a
+      >
+    </span>
+    <%}%> <%if(currentUser && comment.author.username===
+    currentUser.username){%>
+    <span
+      data-comment-id="<%=comment._id%>"
+      data-post-id="<%=postId%>"
+      style="color: var(--blue); font-size: 12px; font-weight: 600"
+      class="comment-indent comment-ex"
+      onclick="deleteComment(event)"
+      >Delete</span
+    >
+
+    <%}%> <%}%>
+  </div>
+
+  <%comment.comments.forEach((comment) => {%>
+  <%-include("./comment",{comment:comment,postId:postId})%> <%})%>
+</div>

@@ -1,0 +1,57 @@
+<ul
+  class="list-group mb-3"
+  style="
+    background-color: #ffffff !important;
+    padding: 10px;
+    border-radius: 10px;
+  "
+>
+  <div class="row">
+    <div class="col-md-2">
+      <div
+        class=""
+        style="
+          background: url('/public/images/snoo-home@2x.png');
+          background-size: 40px 68px;
+          height: 68px;
+          width: 40px;
+        "
+      ></div>
+    </div>
+    <div class="col-md-9">
+      <%if(currentUser) {%>
+      <span style="font-size: 18px; display: block; margin: 20px 5px"
+        >Welcome
+        <a class="post-url" style="font-weight: 500"
+          ><%=currentUser.username%></a
+        >
+      </span>
+      <%} else { %>
+      <span style="font-size: 18px; display: block; margin: 20px 5px"
+        >Home
+      </span>
+      <%}%>
+    </div>
+  </div>
+
+  <div class="text">
+    Your personal Reddit frontpage. Come here to check in with your favorite
+    communities.
+  </div>
+
+  <div class="create-post">
+    <% if(currentUser) {%>
+    <a id="author-create" href="/posts/new">Create Post</a>
+    <%}else {%>
+    <a id="author-create" href="/user/login">Create Post</a>
+    <%}%>
+  </div>
+
+  <div class="create-post">
+    <% if(currentUser) {%>
+    <a href="/subreddits/create" id="create-subs">Create Community</a>
+    <%}else {%>
+    <a href="/user/login" id="create-subs">Create Community</a>
+    <%}%>
+  </div>
+</ul>

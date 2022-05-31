@@ -9,11 +9,6 @@
 * Ejs
 * Mongodb 
 
-
-## 🛠 Skills
-Javascript, HTML, CSS...
-
-
 ## Run Locally
 
 Clone the project

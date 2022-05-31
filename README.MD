@@ -9,15 +9,7 @@
 * Ejs
 * Mongodb 
 
-## Installation
 
-Install with npm
-
-```bash
-  npm install my-project
-  cd my-project
-```
-    
 ## 🛠 Skills
 Javascript, HTML, CSS...
 
